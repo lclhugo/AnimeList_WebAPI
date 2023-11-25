@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  animelistapi:
+    image: ${DOCKER_REGISTRY-}animelistapi
+    build:
+      context: .
+      dockerfile: AnimeListApi/Dockerfile
