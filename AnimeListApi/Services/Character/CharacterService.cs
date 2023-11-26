@@ -22,7 +22,7 @@ namespace AnimeListApi.Services.Character
             return chara ?? null;
         }
 
-        public async Task<object?> AddCharaToDatabase(int charaId)
+        public async Task<string> AddCharaToDatabase(int charaId)
         {
             try
             {

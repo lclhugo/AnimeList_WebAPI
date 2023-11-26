@@ -9,8 +9,7 @@ namespace AnimeListApi.Controllers.Anime;
 
 [ApiController]
 [Route("api/anime/list/")]
-public class AnimeListController : ControllerBase
-{
+public class AnimeListController : ControllerBase {
 
     private readonly AnimeListService _animeListService;
 
@@ -22,8 +21,7 @@ public class AnimeListController : ControllerBase
     /// <param name="username"></param>
     /// <returns>A JSON object containing the anime list</returns>
     [HttpGet("get/{username}")]
-    public async Task<IActionResult> GetAnimeList(string username)
-    {
+    public async Task<IActionResult> GetAnimeList(string username) {
         try
         {
             var result = await _animeListService.GetAnimeFromList(username);
@@ -43,8 +41,7 @@ public class AnimeListController : ControllerBase
     /// <param name="number"></param>
     /// <returns>A JSON object containing the anime list</returns>
     [HttpGet("get/{username}/watching/{number:int}")]
-    public async Task<IActionResult> GetAnimeListWatching(string username, int number)
-    {
+    public async Task<IActionResult> GetAnimeListWatching(string username, int number) {
         try
         {
             var result = await _animeListService.GetLatestWatchingEntries(username, number);
@@ -64,8 +61,7 @@ public class AnimeListController : ControllerBase
     /// <returns>A JSON object containing the anime list infos for the user and the anime</returns>
     [Authorize]
     [HttpGet("get/user/{animeId:int}")]
-    public async Task<IActionResult> GetAnimeListInfosById(int animeId)
-    {
+    public async Task<IActionResult> GetAnimeListInfosById(int animeId) {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
         if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");
@@ -92,8 +88,7 @@ public class AnimeListController : ControllerBase
     /// <returns>A message and a JSON object containing the anime list infos for the user and the anime</returns>
     [Authorize]
     [HttpPost("add/{animeId:int}")]
-    public async Task<IActionResult> AddAnimeToList(int animeId)
-    {
+    public async Task<IActionResult> AddAnimeToList(int animeId) {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
         if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");
@@ -120,8 +115,7 @@ public class AnimeListController : ControllerBase
     /// <exception cref="ArgumentNullException"></exception>
     [Authorize]
     [HttpPut("update/{animeId:int}")]
-    public async Task<IActionResult> UpdateAnimeList([FromBody] Requests.AnimeListRequest request, int animeId)
-    {
+    public async Task<IActionResult> UpdateAnimeList([FromBody] Requests.AnimeListRequest request, int animeId) {
         if (request == null) throw new ArgumentNullException(nameof(request));
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
@@ -146,8 +140,7 @@ public class AnimeListController : ControllerBase
     /// <returns>A message and a JSON object containing the anime list infos for the user and the anime</returns>
     [Authorize]
     [HttpDelete("remove")]
-    public async Task<IActionResult> RemoveAnimeFromList(int animeId)
-    {
+    public async Task<IActionResult> RemoveAnimeFromList(int animeId) {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
         if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");

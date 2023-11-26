@@ -16,20 +16,20 @@ namespace AnimeListApi.Services.Manga
             _jikanHandler = jikanHandler;
         }
 
-        public async Task<AnimeListApi.Models.Data.Manga> CheckIfMangaIsInDb(int mangaId)
+        public async Task<Models.Data.Manga?> CheckIfMangaIsInDb(int mangaId)
         {
             var manga = await _dbContext.Manga.FirstOrDefaultAsync(a => a.Mangaid == mangaId);
             return manga ?? null;
         }
 
 
-        public async Task<object?> AddMangaToDatabase(int mangaId)
+        public async Task<string> AddMangaToDatabase(int mangaId)
         {
             try
             {
                 var mangaData = await _jikanHandler.GetMangaDetails(mangaId);
 
-                var mangaToAdd = new AnimeListApi.Models.Data.Manga
+                var mangaToAdd = new Models.Data.Manga
                 {
                     Mangaid = mangaData.data.mal_id,
                     Title = mangaData.data.title,

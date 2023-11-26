@@ -106,7 +106,7 @@ namespace AnimeListApi.Services.Anime
             return animeList;
         }
 
-        public async Task<object?> AddAnimeToList(Guid userId, int animeId)
+        public async Task<AnimeListDto?> AddAnimeToList(Guid userId, int animeId)
         {
             var isInList = await IsAnimeInList(animeId, userId);
             if (isInList) return null;
@@ -116,7 +116,6 @@ namespace AnimeListApi.Services.Anime
 
             var isAnime = await _animeService.CheckIfAnimeIsInDb(animeId);
             if (isAnime == null) await _animeService.AddAnimeToDatabase(animeId);
-            var anime = await _dbContext.Anime.FirstOrDefaultAsync(a => a.Animeid == animeId);
 
             var animeList = new Animelist
             {
