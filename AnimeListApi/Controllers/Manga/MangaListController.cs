@@ -39,7 +39,7 @@ public class MangaListController : ControllerBase {
     /// <param name="username"></param>
     /// <param name="number"></param>
     /// <returns>A JSON object containing the manga list</returns>
-    [HttpGet("get/{username}/watching/{number:int}")]
+    [HttpGet("get/{username}/reading/{number:int}")]
     public async Task<IActionResult> GetMangaListWatching(string username, int number) {
         try
         {
