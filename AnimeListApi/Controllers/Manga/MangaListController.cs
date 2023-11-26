@@ -43,7 +43,7 @@ public class MangaListController : ControllerBase {
     public async Task<IActionResult> GetMangaListWatching(string username, int number) {
         try
         {
-            var result = await _mangaListService.GetLatestWatchingEntries(username, number);
+            var result = await _mangaListService.GetLatestReadingEntries(username, number);
             return Ok(result);
         }
         catch (Exception e)
