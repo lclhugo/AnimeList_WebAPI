@@ -101,7 +101,7 @@ namespace AnimeListApi.Services.Manga
             return mangaList;
         }
 
-        public async Task<object?> AddMangaToList(Guid userId, int mangaId)
+        public async Task<MangaListDto?> AddMangaToList(Guid userId, int mangaId)
         {
             var isInList = await IsMangaInList(mangaId, userId);
             if (isInList) return null;
@@ -111,7 +111,6 @@ namespace AnimeListApi.Services.Manga
 
             var isManga = await _mangaService.CheckIfMangaIsInDb(mangaId);
             if (isManga == null) await _mangaService.AddMangaToDatabase(mangaId);
-            var manga = await _dbContext.Manga.FirstOrDefaultAsync(a => a.Mangaid == mangaId);
 
             var mangaList = new Mangalist
             {
