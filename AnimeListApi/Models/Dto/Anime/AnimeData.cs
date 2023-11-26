@@ -1,8 +1,7 @@
 ﻿// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 using Newtonsoft.Json;
 
-namespace AnimeListApi.Models.Dto.Anime
-{
+namespace AnimeListApi.Models.Dto.Anime {
     public record AnimeData(
         [property: JsonProperty("data")] Data? Data
     );

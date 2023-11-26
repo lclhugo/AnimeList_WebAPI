@@ -6,13 +6,11 @@ namespace AnimeListApi.Controllers.Manga;
 
 [ApiController]
 [Route("api/manga")]
-public class MangaController : ControllerBase
-{
+public class MangaController : ControllerBase {
     private readonly JikanHandler _jikanHandler = new(new HttpClient(), new MemoryCache(new MemoryCacheOptions()));
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetMangaById(int id)
-    {
+    public async Task<IActionResult> GetMangaById(int id) {
         if (id <= 0) return ErrorHandler.CreateErrorResponse(400, "BadRequest", "Invalid manga id");
 
         try

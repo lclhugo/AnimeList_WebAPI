@@ -6,34 +6,28 @@ using AnimeListApi.Models.Dto.Requests;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace AnimeListApi.Services.Manga
-{
-    public class MangaListService
-    {
+namespace AnimeListApi.Services.Manga {
+    public class MangaListService {
         private readonly AnimeListContext _dbContext;
         private readonly MangaService _mangaService;
 
-        public MangaListService(AnimeListContext dbContext, MangaService mangaService)
-        {
+        public MangaListService(AnimeListContext dbContext, MangaService mangaService) {
             _dbContext = dbContext;
             _mangaService = mangaService;
         }
 
-        public async Task<object?> GetMangaFromList(string username)
-        {
+        public async Task<object?> GetMangaFromList(string username) {
             var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Username == username);
             if (user == null) return null;
 
             var mangaList = await _dbContext.Mangalist
                 .Where(al => al.Userid == user.Id)
-                .Select(al => new
-                {
+                .Select(al => new {
                     al.Mangaid,
                     al.Status,
                     al.Readchapters,
                     al.Rating,
-                    MangaInfo = new
-                    {
+                    MangaInfo = new {
                         al.Manga.Title,
                         al.Manga.Image,
                         al.Manga.Chaptercount,
@@ -47,8 +41,7 @@ namespace AnimeListApi.Services.Manga
             return mangaList;
         }
 
-        public async Task<object?> GetLatestWatchingEntries(string username, int number)
-        {
+        public async Task<object?> GetLatestWatchingEntries(string username, int number) {
             var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Username == username);
             if (user == null) return null;
 
@@ -57,15 +50,13 @@ namespace AnimeListApi.Services.Manga
                 .Where(al => al.Userid == userId && al.Statusid == 1)
                 .OrderByDescending(al => al.Lastupdated)
                 .Take(number)
-                .Select(al => new
-                {
+                .Select(al => new {
                     al.Mangaid,
                     al.Status,
                     al.Readchapters,
                     al.Rating,
                     al.Lastupdated,
-                    MangaInfo = new
-                    {
+                    MangaInfo = new {
                         al.Manga.Title,
                         al.Manga.Image,
                         al.Manga.Chaptercount,
@@ -77,16 +68,14 @@ namespace AnimeListApi.Services.Manga
             return mangaList;
         }
 
-        public async Task<object?> GetMangaListInfosById(Guid guid, int mangaId)
-        {
+        public async Task<object?> GetMangaListInfosById(Guid guid, int mangaId) {
             var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Id == guid);
             if (user == null) return null;
 
             var userId = user.Id;
             var mangaList = await _dbContext.Mangalist
                 .Where(al => al.Mangaid == mangaId && al.Userid == userId)
-                .Select(al => new
-                {
+                .Select(al => new {
                     al.Mangaid,
                     al.Status,
                     al.Readchapters,
@@ -101,8 +90,7 @@ namespace AnimeListApi.Services.Manga
             return mangaList;
         }
 
-        public async Task<MangaListDto?> AddMangaToList(Guid userId, int mangaId)
-        {
+        public async Task<MangaListDto?> AddMangaToList(Guid userId, int mangaId) {
             var isInList = await IsMangaInList(mangaId, userId);
             if (isInList) return null;
 
@@ -112,8 +100,7 @@ namespace AnimeListApi.Services.Manga
             var isManga = await _mangaService.CheckIfMangaIsInDb(mangaId);
             if (isManga == null) await _mangaService.AddMangaToDatabase(mangaId);
 
-            var mangaList = new Mangalist
-            {
+            var mangaList = new Mangalist {
                 Userid = userId,
                 Mangaid = mangaId,
                 Statusid = 1,
@@ -126,8 +113,7 @@ namespace AnimeListApi.Services.Manga
             _dbContext.Mangalist.Add(mangaList);
             await _dbContext.SaveChangesAsync();
 
-            var mangaListDto = new MangaListDto
-            {
+            var mangaListDto = new MangaListDto {
                 UserId = userId,
                 MangaId = mangaId,
                 Status = 1,
@@ -139,8 +125,7 @@ namespace AnimeListApi.Services.Manga
             return mangaListDto;
         }
 
-        public async Task<MangaListDto?> UpdateMangaList(Guid guid, int mangaId, Requests.MangaListRequest request)
-        {
+        public async Task<MangaListDto?> UpdateMangaList(Guid guid, int mangaId, Requests.MangaListRequest request) {
             var isInList = await IsMangaInList(mangaId, guid);
             if (!isInList) return null;
 
@@ -161,8 +146,7 @@ namespace AnimeListApi.Services.Manga
 
             if (request.StatusId == 2) readChapters = manga?.Chaptercount;
 
-            rating = request.Rating switch
-            {
+            rating = request.Rating switch {
                 > 10 => 10,
                 < 0 => 0,
                 _ => rating
@@ -177,8 +161,7 @@ namespace AnimeListApi.Services.Manga
             _dbContext.Mangalist.Update(mangaList);
             await _dbContext.SaveChangesAsync();
 
-            var mangaListDto = new MangaListDto
-            {
+            var mangaListDto = new MangaListDto {
                 UserId = userId,
                 MangaId = mangaId,
                 Status = status,
@@ -190,8 +173,7 @@ namespace AnimeListApi.Services.Manga
             return mangaListDto;
         }
 
-        public async Task<object?> RemoveMangaFromList(Guid requestUserId, int requestMangaId)
-        {
+        public async Task<object?> RemoveMangaFromList(Guid requestUserId, int requestMangaId) {
             var mangaList =
                 await _dbContext.Mangalist.FirstOrDefaultAsync(a =>
                     a.Mangaid == requestMangaId && a.Userid == requestUserId);
@@ -201,14 +183,12 @@ namespace AnimeListApi.Services.Manga
             return mangaList;
         }
 
-        private async Task<bool> IsMangaInList(int id, Guid userId)
-        {
+        private async Task<bool> IsMangaInList(int id, Guid userId) {
             var mangaList = await _dbContext.Mangalist.FirstOrDefaultAsync(a => a.Mangaid == id && a.Userid == userId);
             return mangaList != null;
         }
 
-        private async Task<int> GetStatusIdByName(string statusName)
-        {
+        private async Task<int> GetStatusIdByName(string statusName) {
             var status = await _dbContext.Status.FirstOrDefaultAsync(s => s.Statusname == statusName);
             return status?.Statusid ?? 1;
         }

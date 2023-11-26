@@ -2,34 +2,28 @@
 using AnimeListApi.Models.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace AnimeListApi.Services.Anime
-{
-    public class AnimeService
-    {
+namespace AnimeListApi.Services.Anime {
+    public class AnimeService {
         private readonly AnimeListContext _dbContext;
         private readonly JikanHandler _jikanHandler;
 
-        public AnimeService(AnimeListContext dbContext, JikanHandler jikanHandler)
-        {
+        public AnimeService(AnimeListContext dbContext, JikanHandler jikanHandler) {
             _dbContext = dbContext;
             _jikanHandler = jikanHandler;
         }
 
-        public async Task<Models.Data.Anime?> CheckIfAnimeIsInDb(int animeId)
-        {
+        public async Task<Models.Data.Anime?> CheckIfAnimeIsInDb(int animeId) {
             var anime = await _dbContext.Anime.FirstOrDefaultAsync(a => a.Animeid == animeId);
             return anime ?? null;
         }
 
 
-        public async Task<object?> AddAnimeToDatabase(int animeId)
-        {
+        public async Task<object?> AddAnimeToDatabase(int animeId) {
             try
             {
                 var animeData = await _jikanHandler.GetAnimeDetails(animeId);
 
-                var animeToAdd = new Models.Data.Anime
-                {
+                var animeToAdd = new Models.Data.Anime {
                     Animeid = animeData.Data.MalId,
                     Title = animeData.Data.Title,
                     Image = animeData.Data.Images.Jpg.ImageUrl,
@@ -49,8 +43,7 @@ namespace AnimeListApi.Services.Anime
             }
         }
 
-        public async Task<int> GetEpisodeCount(int id)
-        {
+        public async Task<int> GetEpisodeCount(int id) {
             var anime = await _dbContext.Anime.FirstOrDefaultAsync(a => a.Animeid == id);
             return anime?.Episodecount ?? 0;
         }

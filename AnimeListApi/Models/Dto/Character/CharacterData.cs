@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace AnimeListApi.Models.Dto.Character
-{
+namespace AnimeListApi.Models.Dto.Character {
     public record Data(
         [property: JsonProperty("mal_id")] int mal_id,
         [property: JsonProperty("url")] string url,

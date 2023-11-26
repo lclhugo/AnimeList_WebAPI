@@ -6,26 +6,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace AnimeListApi.Controllers.Character
-{
+namespace AnimeListApi.Controllers.Character {
     [ApiController]
     [Route("api/character")]
-    public class CharacterController : ControllerBase
-    {
+    public class CharacterController : ControllerBase {
         private readonly CharacterService _characterService;
         private readonly JikanHandler _jikanHandler;
 
 
-        public CharacterController(CharacterService characterService)
-        {
+        public CharacterController(CharacterService characterService) {
             _characterService = characterService;
             _jikanHandler = new JikanHandler(new HttpClient(), new MemoryCache(new MemoryCacheOptions()));
         }
 
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetCharacterById(int id)
-        {
+        public async Task<IActionResult> GetCharacterById(int id) {
             if (id <= 0) return ErrorHandler.CreateErrorResponse(400, "BadRequest", "Invalid character id");
 
             try
@@ -40,8 +36,7 @@ namespace AnimeListApi.Controllers.Character
         }
 
         [HttpPost("add/{id:int}")]
-        public async Task<IActionResult> AddCharacterToDb(int id)
-        {
+        public async Task<IActionResult> AddCharacterToDb(int id) {
 
             if (id <= 0) return ErrorHandler.CreateErrorResponse(400, "BadRequest", "Invalid character id");
             try

@@ -1,7 +1,6 @@
 ﻿namespace AnimeListApi.Models.Dto.Manga;
 
-public class MangaListDto
-{
+public class MangaListDto {
     public Guid? UserId { get; set; }
 
     public int? MangaId { get; set; }

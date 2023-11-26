@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
 
-namespace AnimeListApi.Test
-{
-    public class AnimeTest : IClassFixture<WebApplicationFactory<Program>>
-    {
+namespace AnimeListApi.Test {
+    public class AnimeTest : IClassFixture<WebApplicationFactory<Program>> {
         private readonly WebApplicationFactory<Program> _factory;
 
         public AnimeTest(WebApplicationFactory<Program> factory) => _factory = factory;
@@ -16,8 +14,7 @@ namespace AnimeListApi.Test
         private const string InvalidAnimeId = "aaa";
 
         [Fact]
-        public async Task GetAnimeById_ReturnsOk()
-        {
+        public async Task GetAnimeById_ReturnsOk() {
             var client = _factory.CreateClient();
 
             // QUAND on fait GET sur /api/anime/1
@@ -27,8 +24,7 @@ namespace AnimeListApi.Test
         }
 
         [Fact]
-        public async Task GetAnimeById_ReturnsNotFound()
-        {
+        public async Task GetAnimeById_ReturnsNotFound() {
             var client = _factory.CreateClient();
 
             // QUAND on fait GET sur /api/anime/aaa
@@ -38,8 +34,7 @@ namespace AnimeListApi.Test
         }
 
         [Fact]
-        public async Task GetMangaById_ReturnsOk()
-        {
+        public async Task GetMangaById_ReturnsOk() {
             var client = _factory.CreateClient();
 
             // QUAND on fait GET sur /api/anime/1
@@ -49,8 +44,7 @@ namespace AnimeListApi.Test
         }
 
         [Fact]
-        public async Task GetMangaById_ReturnsNotFound()
-        {
+        public async Task GetMangaById_ReturnsNotFound() {
             var client = _factory.CreateClient();
 
             // QUAND on fait GET sur /api/manga/aaa
@@ -60,8 +54,7 @@ namespace AnimeListApi.Test
         }
 
         [Fact]
-        public async Task GetCharacterById_ReturnsOk()
-        {
+        public async Task GetCharacterById_ReturnsOk() {
             var client = _factory.CreateClient();
 
             // QUAND on fait GET sur /api/character/1
@@ -71,8 +64,7 @@ namespace AnimeListApi.Test
         }
 
         [Fact]
-        public async Task GetCharacterById_ReturnsNotFound()
-        {
+        public async Task GetCharacterById_ReturnsNotFound() {
             var client = _factory.CreateClient();
 
             // QUAND on fait GET sur /api/character/aaa

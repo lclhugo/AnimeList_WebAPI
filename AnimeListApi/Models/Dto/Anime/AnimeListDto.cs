@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace AnimeListApi.Models.Dto.Anime
-{
-    public class AnimeListDto
-    {
+namespace AnimeListApi.Models.Dto.Anime {
+    public class AnimeListDto {
         public Guid UserId { get; set; }
 
         public int AnimeId { get; set; }
@@ -18,4 +16,4 @@ namespace AnimeListApi.Models.Dto.Anime
 
         public DateTime LastUpdated { get; set; }
     }
-}   
+}

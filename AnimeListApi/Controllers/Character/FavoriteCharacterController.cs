@@ -11,8 +11,7 @@ namespace AnimeListApi.Controllers.Character;
 
 [ApiController]
 [Route("api/favorite-characters/")]
-public class FavoriteCharacterController : ControllerBase
-{
+public class FavoriteCharacterController : ControllerBase {
 
 
     private readonly FavoriteCharactersService _favCharaService;
@@ -20,8 +19,7 @@ public class FavoriteCharacterController : ControllerBase
     public FavoriteCharacterController(FavoriteCharactersService favCharaService) => _favCharaService = favCharaService;
 
     [HttpGet("get/{username}")]
-    public async Task<IActionResult> GetFavoriteCharacter(string username)
-    {
+    public async Task<IActionResult> GetFavoriteCharacter(string username) {
         try
         {
             var result = await _favCharaService.GetFavoriteCharacters(username);
@@ -35,8 +33,7 @@ public class FavoriteCharacterController : ControllerBase
 
     [Authorize]
     [HttpPost("add")]
-    public async Task<IActionResult> AddCharacterToFavorites(int characterId)
-    {
+    public async Task<IActionResult> AddCharacterToFavorites(int characterId) {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
         if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");
@@ -54,8 +51,7 @@ public class FavoriteCharacterController : ControllerBase
 
     [Authorize]
     [HttpDelete("remove")]
-    public async Task<IActionResult> RemoveCharacterFromFavorites(int characterId)
-    {
+    public async Task<IActionResult> RemoveCharacterFromFavorites(int characterId) {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
         if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");
@@ -73,8 +69,7 @@ public class FavoriteCharacterController : ControllerBase
 
     [Authorize]
     [HttpGet("is-in-fav")]
-    public async Task<IActionResult> IsCharaInFav(int characterId)
-    {
+    public async Task<IActionResult> IsCharaInFav(int characterId) {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
         if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");

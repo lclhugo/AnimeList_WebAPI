@@ -6,20 +6,17 @@ using Newtonsoft.Json;
 
 namespace AnimeListApi.Handlers;
 
-public class JikanHandler
-{
+public class JikanHandler {
     private readonly HttpClient _httpClient;
     private readonly IMemoryCache _cache;
     private const string JikanApiBaseUrl = "https://api.jikan.moe/v4";
 
-    public JikanHandler(HttpClient httpClient, IMemoryCache cache)
-    {
+    public JikanHandler(HttpClient httpClient, IMemoryCache cache) {
         _httpClient = httpClient;
         _cache = cache;
     }
 
-    public async Task<AnimeData?> GetAnimeDetails(int animeId)
-    {
+    public async Task<AnimeData?> GetAnimeDetails(int animeId) {
         try
         {
             var cacheKey = $"Anime_{animeId}";
@@ -30,8 +27,7 @@ public class JikanHandler
             var response = await _httpClient.GetStringAsync(requestUri);
             var animeData = JsonConvert.DeserializeObject<AnimeData>(response);
 
-            var cacheEntryOptions = new MemoryCacheEntryOptions
-            {
+            var cacheEntryOptions = new MemoryCacheEntryOptions {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
             };
 
@@ -45,8 +41,7 @@ public class JikanHandler
         }
     }
 
-    public async Task<MangaData?> GetMangaDetails(int mangaId)
-    {
+    public async Task<MangaData?> GetMangaDetails(int mangaId) {
         try
         {
             var cacheKey = $"Manga_{mangaId}";
@@ -57,8 +52,7 @@ public class JikanHandler
             var response = await _httpClient.GetStringAsync(requestUri);
             var mangaData = JsonConvert.DeserializeObject<MangaData>(response);
 
-            var cacheEntryOptions = new MemoryCacheEntryOptions
-            {
+            var cacheEntryOptions = new MemoryCacheEntryOptions {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
             };
 
@@ -72,8 +66,7 @@ public class JikanHandler
         }
     }
 
-    public async Task<CharacterData?> GetCharacterDetails(int characterId)
-    {
+    public async Task<CharacterData?> GetCharacterDetails(int characterId) {
         try
         {
             var cacheKey = $"Character_{characterId}";
@@ -84,8 +77,7 @@ public class JikanHandler
             var response = await _httpClient.GetStringAsync(requestUri);
             var characterData = JsonConvert.DeserializeObject<CharacterData>(response);
 
-            var cacheEntryOptions = new MemoryCacheEntryOptions
-            {
+            var cacheEntryOptions = new MemoryCacheEntryOptions {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
             };
 

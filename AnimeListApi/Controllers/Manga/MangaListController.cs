@@ -8,8 +8,7 @@ namespace AnimeListApi.Controllers.Manga;
 
 [ApiController]
 [Route("api/manga/list/")]
-public class MangaListController : ControllerBase
-{
+public class MangaListController : ControllerBase {
 
     private readonly MangaListService _mangaListService;
 
@@ -21,8 +20,7 @@ public class MangaListController : ControllerBase
     /// <param name="username"></param>
     /// <returns>A JSON object containing the manga list</returns>
     [HttpGet("get/{username}")]
-    public async Task<IActionResult> GetMangaList(string username)
-    {
+    public async Task<IActionResult> GetMangaList(string username) {
         try
         {
             var result = await _mangaListService.GetMangaFromList(username);
@@ -42,8 +40,7 @@ public class MangaListController : ControllerBase
     /// <param name="number"></param>
     /// <returns>A JSON object containing the manga list</returns>
     [HttpGet("get/{username}/watching/{number:int}")]
-    public async Task<IActionResult> GetMangaListWatching(string username, int number)
-    {
+    public async Task<IActionResult> GetMangaListWatching(string username, int number) {
         try
         {
             var result = await _mangaListService.GetLatestWatchingEntries(username, number);
@@ -63,8 +60,7 @@ public class MangaListController : ControllerBase
     /// <returns>A JSON object containing the manga list infos for the user and the manga</returns>
     [Authorize]
     [HttpGet("get/user/{mangaId:int}")]
-    public async Task<IActionResult> GetMangaListInfosById(int mangaId)
-    {
+    public async Task<IActionResult> GetMangaListInfosById(int mangaId) {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
         if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");
@@ -91,8 +87,7 @@ public class MangaListController : ControllerBase
     /// <returns>A message and a JSON object containing the manga list infos for the user and the manga</returns>
     [Authorize]
     [HttpPost("add/{mangaId:int}")]
-    public async Task<IActionResult> AddMangaToList(int mangaId)
-    {
+    public async Task<IActionResult> AddMangaToList(int mangaId) {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
         if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");
@@ -119,8 +114,7 @@ public class MangaListController : ControllerBase
     /// <exception cref="ArgumentNullException"></exception>
     [Authorize]
     [HttpPut("update/{mangaId:int}")]
-    public async Task<IActionResult> UpdateMangaList([FromBody] Requests.MangaListRequest request, int mangaId)
-    {
+    public async Task<IActionResult> UpdateMangaList([FromBody] Requests.MangaListRequest request, int mangaId) {
         if (request == null) throw new ArgumentNullException(nameof(request));
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
@@ -145,8 +139,7 @@ public class MangaListController : ControllerBase
     /// <returns>A message and a JSON object containing the manga list infos for the user and the manga</returns>
     [Authorize]
     [HttpDelete("remove")]
-    public async Task<IActionResult> RemoveMangaFromList(int mangaId)
-    {
+    public async Task<IActionResult> RemoveMangaFromList(int mangaId) {
         var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var guid = JwtHandler.GetGuidFromJwt(jwt);
         if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");

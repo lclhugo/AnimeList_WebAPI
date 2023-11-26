@@ -7,34 +7,28 @@ using AnimeListApi.Models.Dto.Requests;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace AnimeListApi.Services.Anime
-{
-    public class AnimeListService
-    {
+namespace AnimeListApi.Services.Anime {
+    public class AnimeListService {
         private readonly AnimeListContext _dbContext;
         private readonly AnimeService _animeService;
 
-        public AnimeListService(AnimeListContext dbContext, AnimeService animeService)
-        {
+        public AnimeListService(AnimeListContext dbContext, AnimeService animeService) {
             _dbContext = dbContext;
             _animeService = animeService;
         }
 
-        public async Task<object?> GetAnimeFromList(string username)
-        {
+        public async Task<object?> GetAnimeFromList(string username) {
             var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Username == username);
             if (user == null) return null;
 
             var animeList = await _dbContext.Animelist
                 .Where(al => al.Userid == user.Id)
-                .Select(al => new
-                {
+                .Select(al => new {
                     al.Animeid,
                     al.Status,
                     al.Watchedepisodes,
                     al.Rating,
-                    AnimeInfo = new
-                    {
+                    AnimeInfo = new {
                         al.Anime.Title,
                         al.Anime.Image,
                         al.Anime.Type,
@@ -50,8 +44,7 @@ namespace AnimeListApi.Services.Anime
             return animeList;
         }
 
-        public async Task<object?> GetLatestWatchingEntries(string username, int number)
-        {
+        public async Task<object?> GetLatestWatchingEntries(string username, int number) {
             var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Username == username);
             if (user == null) return null;
 
@@ -60,15 +53,13 @@ namespace AnimeListApi.Services.Anime
                 .Where(al => al.Userid == userId && al.Statusid == 1)
                 .OrderByDescending(al => al.Lastupdated)
                 .Take(number)
-                .Select(al => new
-                {
+                .Select(al => new {
                     al.Animeid,
                     al.Status,
                     al.Watchedepisodes,
                     al.Rating,
                     al.Lastupdated,
-                    AnimeInfo = new
-                    {
+                    AnimeInfo = new {
                         al.Anime.Title,
                         al.Anime.Image,
                         al.Anime.Type,
@@ -82,16 +73,14 @@ namespace AnimeListApi.Services.Anime
             return animeList;
         }
 
-        public async Task<object?> GetAnimeListInfosById(Guid guid, int animeId)
-        {
+        public async Task<object?> GetAnimeListInfosById(Guid guid, int animeId) {
             var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Id == guid);
             if (user == null) return null;
 
             var userId = user.Id;
             var animeList = await _dbContext.Animelist
                 .Where(al => al.Animeid == animeId && al.Userid == userId)
-                .Select(al => new
-                {
+                .Select(al => new {
                     al.Animeid,
                     al.Status,
                     al.Watchedepisodes,
@@ -106,19 +95,17 @@ namespace AnimeListApi.Services.Anime
             return animeList;
         }
 
-        public async Task<AnimeListDto?> AddAnimeToList(Guid userId, int animeId)
-        {
+        public async Task<AnimeListDto?> AddAnimeToList(Guid userId, int animeId) {
             var isInList = await IsAnimeInList(animeId, userId);
             if (isInList) return null;
 
-            var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Id== userId);
+            var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null) return null;
 
             var isAnime = await _animeService.CheckIfAnimeIsInDb(animeId);
             if (isAnime == null) await _animeService.AddAnimeToDatabase(animeId);
 
-            var animeList = new Animelist
-            {
+            var animeList = new Animelist {
                 Userid = userId,
                 Animeid = animeId,
                 Statusid = 1,
@@ -131,8 +118,7 @@ namespace AnimeListApi.Services.Anime
             _dbContext.Animelist.Add(animeList);
             await _dbContext.SaveChangesAsync();
 
-            var animeListDto = new AnimeListDto
-            {
+            var animeListDto = new AnimeListDto {
                 UserId = userId,
                 AnimeId = animeId,
                 Status = 1,
@@ -144,8 +130,7 @@ namespace AnimeListApi.Services.Anime
             return animeListDto;
         }
 
-        public async Task<AnimeListDto?> UpdateAnimeList(Guid guid, int animeId, Requests.AnimeListRequest request)
-        {
+        public async Task<AnimeListDto?> UpdateAnimeList(Guid guid, int animeId, Requests.AnimeListRequest request) {
             var isInList = await IsAnimeInList(animeId, guid);
             if (!isInList) return null;
 
@@ -166,8 +151,7 @@ namespace AnimeListApi.Services.Anime
 
             if (request.StatusId == 2) watchedEpisodes = anime?.Episodecount;
 
-            rating = request.Rating switch
-            {
+            rating = request.Rating switch {
                 > 10 => 10,
                 < 0 => 0,
                 _ => rating
@@ -182,8 +166,7 @@ namespace AnimeListApi.Services.Anime
             _dbContext.Animelist.Update(animeList);
             await _dbContext.SaveChangesAsync();
 
-            var animeListDto = new AnimeListDto
-            {
+            var animeListDto = new AnimeListDto {
                 UserId = userId,
                 AnimeId = animeId,
                 Status = status,
@@ -195,8 +178,7 @@ namespace AnimeListApi.Services.Anime
             return animeListDto;
         }
 
-        public async Task<object?> RemoveAnimeFromList(Guid requestUserId, int requestAnimeId)
-        {
+        public async Task<object?> RemoveAnimeFromList(Guid requestUserId, int requestAnimeId) {
             var animeList =
                 await _dbContext.Animelist.FirstOrDefaultAsync(a =>
                     a.Animeid == requestAnimeId && a.Userid == requestUserId);
@@ -206,14 +188,12 @@ namespace AnimeListApi.Services.Anime
             return animeList;
         }
 
-        private async Task<bool> IsAnimeInList(int id, Guid userId)
-        {
+        private async Task<bool> IsAnimeInList(int id, Guid userId) {
             var animeList = await _dbContext.Animelist.FirstOrDefaultAsync(a => a.Animeid == id && a.Userid == userId);
             return animeList != null;
         }
 
-        private async Task<int> GetStatusIdByName(string statusName)
-        {
+        private async Task<int> GetStatusIdByName(string statusName) {
             var status = await _dbContext.Status.FirstOrDefaultAsync(s => s.Statusname == statusName);
             return status?.Statusid ?? 1;
         }

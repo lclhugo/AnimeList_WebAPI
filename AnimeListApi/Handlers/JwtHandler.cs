@@ -4,12 +4,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace AnimeListApi.Handlers
-{
-    public static class JwtHandler
-    {
-        public static Guid GetGuidFromJwt(string jwtToken)
-        {
+namespace AnimeListApi.Handlers {
+    public static class JwtHandler {
+        public static Guid GetGuidFromJwt(string jwtToken) {
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.ReadJwtToken(jwtToken);
 

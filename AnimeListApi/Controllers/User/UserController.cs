@@ -5,23 +5,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace AnimeListApi.Controllers.User
-{
+namespace AnimeListApi.Controllers.User {
     [ApiController]
     [Route("api/user")]
-    public class UserController : ControllerBase
-    {
+    public class UserController : ControllerBase {
         private readonly UserService _userService;
 
-        public UserController(UserService userService)
-        {
+        public UserController(UserService userService) {
             _userService = userService;
         }
 
 
         [HttpGet("{username}")]
-        public async Task<IActionResult> GetUserByUsername(string username)
-        {
+        public async Task<IActionResult> GetUserByUsername(string username) {
             try
             {
                 var result = await _userService.GetUserByUsername(username);
@@ -35,8 +31,7 @@ namespace AnimeListApi.Controllers.User
 
 
         [HttpGet("check-username/{username}")]
-        public async Task<IActionResult> CheckIfUsernameIsAvailable(string username)
-        {
+        public async Task<IActionResult> CheckIfUsernameIsAvailable(string username) {
             try
             {
                 var result = await _userService.CheckIfUsernameIsAvailable(username);
@@ -50,8 +45,7 @@ namespace AnimeListApi.Controllers.User
 
         //search user by username
         [HttpGet("search/{username}")]
-        public async Task<IActionResult> SearchUserByUsername(string username, int pageNumber)
-        {
+        public async Task<IActionResult> SearchUserByUsername(string username, int pageNumber) {
             try
             {
                 var (users, totalPages) = await _userService.SearchUserByUsername(username, pageNumber);
@@ -67,8 +61,7 @@ namespace AnimeListApi.Controllers.User
 
         [Authorize]
         [HttpPut("change-bio")]
-        public async Task<IActionResult> ChangeBio(string bio)
-        {
+        public async Task<IActionResult> ChangeBio(string bio) {
             var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var guid = JwtHandler.GetGuidFromJwt(jwt);
             if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");
