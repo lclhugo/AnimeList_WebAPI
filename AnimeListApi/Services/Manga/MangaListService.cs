@@ -41,7 +41,7 @@ namespace AnimeListApi.Services.Manga {
             return mangaList;
         }
 
-        public async Task<object?> GetLatestWatchingEntries(string username, int number) {
+        public async Task<object?> GetLatestReadingEntries(string username, int number) {
             var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Username == username);
             if (user == null) return null;
 

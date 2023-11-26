@@ -45,7 +45,7 @@ public class AnimeListController : ControllerBase {
         try
         {
             var result = await _animeListService.GetLatestWatchingEntries(username, number);
-            return Ok(result);
+            return result == null ? ErrorHandler.CreateErrorResponse(404, "Not found", "No anime found for this user.") : Ok(result);
         }
         catch (Exception e)
         {

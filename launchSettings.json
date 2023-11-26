@@ -3,6 +3,8 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
+      "httpPort": 5000,
+      "sslPort": 5001,
       "serviceActions": {
         "animelistapi": "StartDebugging"
       }

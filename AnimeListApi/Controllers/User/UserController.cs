@@ -61,7 +61,7 @@ namespace AnimeListApi.Controllers.User {
 
         [Authorize]
         [HttpPut("change-bio")]
-        public async Task<IActionResult> ChangeBio(string bio) {
+        public async Task<IActionResult> ChangeBio([FromBody] string bio) { 
             var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var guid = JwtHandler.GetGuidFromJwt(jwt);
             if (guid == Guid.Empty) return ErrorHandler.CreateErrorResponse(401, "Unauthorized", "You are not authorized to perform this action.");
