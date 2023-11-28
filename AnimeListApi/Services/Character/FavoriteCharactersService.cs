@@ -1,11 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Xml.Linq;
-using AnimeListApi.Models.Data;
-using AnimeListApi.Models.Dto.Anime;
-using AnimeListApi.Models.Dto.Character;
-using AnimeListApi.Models.Dto.Requests;
-using AnimeListApi.Services.Anime;
-using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using AnimeListApi.Models.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnimeListApi.Services.Character {
@@ -49,6 +42,9 @@ namespace AnimeListApi.Services.Character {
             if (isCharaInDb == null) await _characterService.AddCharaToDatabase(CharacterId);
             var isCharaInFav = await IsCharaInList(CharacterId, userId);
             if (isCharaInFav) throw new Exception("Character already in your favorites");
+
+            var favCharas = await _dbContext.Favoritecharacters.Where(c => c.Userid == userId).ToListAsync();
+            if (favCharas.Count >= 5) throw new Exception("You already have 10 characters in your favorites");
 
             var favChara = new Favoritecharacters {
                 Characterid = CharacterId,

@@ -83,4 +83,6 @@ public class FavoriteCharacterController : ControllerBase {
             return ErrorHandler.CreateErrorResponse(500, "InternalServerError", e.Message);
         }
     }
+
+
 }

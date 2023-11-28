@@ -35,7 +35,7 @@ namespace AnimeListApi.Controllers.User {
             try
             {
                 var result = await _userService.CheckIfUsernameIsAvailable(username);
-                return Ok(result);
+                return result ? Ok(result) : ErrorHandler.CreateErrorResponse(409, "Conflict", "Username is already taken.");
             }
             catch (Exception e)
             {
@@ -43,7 +43,19 @@ namespace AnimeListApi.Controllers.User {
             }
         }
 
-        //search user by username
+        [HttpGet("does-user-exists/{username}")]
+        public async Task<IActionResult> DoesUserExists(string username) {
+            try
+            {
+                var result = await _userService.CheckIfUsernameIsAvailable(username);
+                return result ? ErrorHandler.CreateErrorResponse(404, "NotFound", "User not found.") : Ok(true);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandler.CreateErrorResponse(500, "InternalServerError", e.Message);
+            }
+        }
+
         [HttpGet("search/{username}")]
         public async Task<IActionResult> SearchUserByUsername(string username, int pageNumber) {
             try
